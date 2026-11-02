@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <pigpio.h>
 
-#define PIN 4 //GPIO 4
+#define PIN 17
 
 int main(int argc, char* argv[])
 {
