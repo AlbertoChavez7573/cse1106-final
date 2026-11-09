@@ -3,6 +3,7 @@
 #include <pigpio.h>
 
 #define PIN 17
+
 int main(int argc, char* argv[])
 {
    FILE *log = fopen("student_log.csv", "w+");
@@ -10,6 +11,7 @@ int main(int argc, char* argv[])
       printf("Invalid file");
       return 1;
    }
+   
    gpioInitialise();
    gpioSetMode(PIN, PI_OUTPUT);
    gpioWrite(PIN, 0); //LED OFF
@@ -21,8 +23,7 @@ int main(int argc, char* argv[])
          printf("Invalid Number. Try again ");
          scanf("%d", &max_capacity);
    }
-   while(students < max_capacity && students >= 0){
-      gpioWrite(PIN, 0); //LED OFF
+   while(students >= 0){
       printf("How many students are currently in the room? ");
       scanf("%d", &students);
       while(students < 0){
@@ -30,17 +31,19 @@ int main(int argc, char* argv[])
          scanf("%d", &students);
       } 
       if(students < max_capacity){
+         gpioWrite(PIN, 0); //LED OFF
          printf("%d/%d Room has space available\n", students, max_capacity);
       }
-      fprintf(log, "%d\n", students);
-   }
-   if(students > max_capacity){
+     if(students == max_capacity){
+        gpioWrite(PIN, 1); //LED ON
+        printf("%d/%d Room is full.\n", students, max_capacity); 
+      }
+      if(students > max_capacity){
+         gpioWrite(PIN, 1); //LED ON
          printf("%d/%d Room is already at capacity.\n", max_capacity, max_capacity);
-   }
-   if(students == max_capacity){
-      gpioWrite(PIN, 1); //LED ON
-      printf("%d/%d Room is full.\n", students, max_capacity);
-   }
+       }
+      fprintf(log, "%d\n", students);
+   }  
    gpioTerminate();
    fclose(log);
    return 0;
