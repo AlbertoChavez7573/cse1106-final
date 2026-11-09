@@ -5,8 +5,14 @@
 #define PIN 17
 int main(int argc, char* argv[])
 {
+   FILE *log = fopen("student_log.csv", "w+");
+   if(log == NULL){
+      printf("Invalid file");
+      return 1;
+   }
    gpioInitialise();
    gpioSetMode(PIN, PI_OUTPUT);
+   gpioWrite(PIN, 0); //LED OFF
    int max_capacity = 5; 
    int students = 0; //number of students
    printf("The current maximum capacity is %d. If this is incorrect, input the new capacity. ", max_capacity);
@@ -26,14 +32,16 @@ int main(int argc, char* argv[])
       if(students < max_capacity){
          printf("%d/%d Room has space available\n", students, max_capacity);
       }
+      fprintf(log, "%d\n", students);
    }
    if(students > max_capacity){
          printf("%d/%d Room is already at capacity.\n", max_capacity, max_capacity);
    }
    if(students == max_capacity){
       gpioWrite(PIN, 1); //LED ON
-      printf("%d/%d Room is full\n", students, max_capacity);
+      printf("%d/%d Room is full.\n", students, max_capacity);
    }
    gpioTerminate();
+   fclose(log);
    return 0;
 }
