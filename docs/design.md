@@ -1,0 +1,1 @@
+Max capacity will be 5 students which will be recorded with an int and tracked with a while loop. 
